@@ -9,12 +9,11 @@ var builder = WebApplication.CreateBuilder(args);
 	builder.Services.AddInfrastructure(builder.Configuration);
 	builder.Services.AddControllers();
 
-	builder.Services.AddSingleton<ProblemDetailsFactory, BuberDinnerProblemDetailsFactory>();
+	builder.Services.AddSingleton<ProblemDetailsFactory, ApiProblemDetailsFactory>();
 }
 
 var app = builder.Build();
 {
-	app.UseExceptionHandler("/error");
 	app.UseHttpsRedirection();
 	app.MapControllers();
 	app.MapGet("/", () => "Server is Living!");

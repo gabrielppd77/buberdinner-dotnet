@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using ErrorOr;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
@@ -6,11 +7,11 @@ using Microsoft.Extensions.Options;
 
 namespace BuberDinner.Api.Common.Errors;
 
-public class BuberDinnerProblemDetailsFactory : ProblemDetailsFactory
+public class ApiProblemDetailsFactory : ProblemDetailsFactory
 {
 	private readonly ApiBehaviorOptions _options;
 
-	public BuberDinnerProblemDetailsFactory(IOptions<ApiBehaviorOptions> options)
+	public ApiProblemDetailsFactory(IOptions<ApiBehaviorOptions> options)
 	{
 		_options = options?.Value ?? throw new ArgumentNullException(nameof(options));
 	}
@@ -91,12 +92,11 @@ public class BuberDinnerProblemDetailsFactory : ProblemDetailsFactory
 			problemDetails.Extensions["traceId"] = traceId;
 		}
 
-		// here we access the property that we set inside the ApiController
-		// var errors = httpContext?.Items[HttpContextItemKeys.Errors] as List<Error>;
-		// if (errors is not null)
-		// {
-		problemDetails.Extensions.Add("customProperty", "customValue");
-		// problemDetails.Extensions.Add("errorCodes", errors.Select(e => e.Code));
-		// }
+		//here we access the property that we set inside the ApiController
+		var errors = httpContext?.Items[HttpContextItemKeys.Errors] as List<Error>;
+		if (errors is not null)
+		{
+			problemDetails.Extensions.Add("errorCodes", errors.Select(e => e.Code));
+		}
 	}
 }
