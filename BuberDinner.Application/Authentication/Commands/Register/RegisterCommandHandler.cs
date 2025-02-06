@@ -22,21 +22,21 @@ public class RegisterCommandHandler :
 		_userRepository = userRepository;
 	}
 
-	public async Task<ErrorOr<AuthenticationResult>> Handle(RegisterCommand command, CancellationToken cancellationToken)
+	public async Task<ErrorOr<AuthenticationResult>> Handle(RegisterCommand request, CancellationToken cancellationToken)
 	{
 		await Task.CompletedTask;
 
-		if (_userRepository.GetUserByEmail(command.Email) is not null)
+		if (_userRepository.GetUserByEmail(request.Email) is not null)
 		{
 			return Errors.User.DuplicateEmail;
 		}
 
 		var user = new User()
 		{
-			FirstName = command.FirstName,
-			LastName = command.LastName,
-			Email = command.Email,
-			Password = command.Password
+			FirstName = request.FirstName,
+			LastName = request.LastName,
+			Email = request.Email,
+			Password = request.Password
 		};
 		_userRepository.Add(user);
 
