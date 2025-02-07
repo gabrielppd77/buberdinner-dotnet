@@ -12,8 +12,10 @@ var builder = WebApplication.CreateBuilder(args);
 var app = builder.Build();
 {
 	app.UseHttpsRedirection();
-	app.MapControllers();
+	app.MapControllers().RequireAuthorization();
 	app.MapGet("/", () => "Server is Living!");
+	app.UseAuthentication();
+	app.UseAuthorization();
 
 	app.Run();
 }
